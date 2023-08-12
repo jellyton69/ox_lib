@@ -1,5 +1,5 @@
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
-import { Box, Stack, Text, Flex, createStyles } from '@mantine/core';
+import { Box, Stack, Text, Flex, createStyles, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { ContextMenuProps } from '../../../typings';
 import ContextButton from './components/ContextButton';
@@ -30,7 +30,7 @@ const useStyles = createStyles((theme) => ({
   titleContainer: {
     borderRadius: 4,
     flex: '1 85%',
-    backgroundColor: theme.colors.dark[6],
+    backgroundColor: theme.colors.dark[8],
   },
   titleText: {
     color: theme.colors.dark[0],
@@ -92,7 +92,7 @@ const ContextMenu: React.FC = () => {
             <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
           )}
           <Box className={classes.titleContainer}>
-            <Text className={classes.titleText}>
+            <Title order={3} className={classes.titleText}>
               <ReactMarkdown components={markdownComponents}>{contextMenu.title}</ReactMarkdown>
             </Title>
           </Box>

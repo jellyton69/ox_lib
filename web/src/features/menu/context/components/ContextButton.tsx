@@ -1,4 +1,4 @@
-import { Button, Box, Group, Stack, Text, Progress, HoverCard, Image, createStyles } from '@mantine/core';
+import { Button, Box, Group, Stack, Text, Progress, HoverCard, Image, createStyles, Title } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
 import { Option, ContextMenuProps } from '../../../../typings';
@@ -28,6 +28,7 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
     height: 'fit-content',
     width: '100%',
     padding: 10,
+    backgroundColor: theme.colors.dark[8],
   },
   iconImage: {
     maxWidth: '25px',

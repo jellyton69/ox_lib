@@ -74,6 +74,22 @@ export const debugContext = () => {
             event: 'some_event',
             args: { value1: 300, value2: 'Other value' },
           },
+          {
+            title: 'Event button',
+            description: `[^1]: My reference.`,
+          },
+          {
+            title: 'Event button',
+            description: `# Heading 1`,
+          },
+          {
+            title: 'Event button',
+            description: `## Heading 2`,
+          },
+          {
+            title: 'Event button',
+            description: `### Heading 3`,
+          },
         ],
       },
     },
