@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ScaleFade from '../../transitions/ScaleFade';
 import remarkGfm from 'remark-gfm';
 import type { TextUiProps, TextUiPosition } from '../../typings';
-import { markdownComponents } from '../../config/markdowncomponents';
+import MarkdownComponents from '../../config/MarkdownComponents';
 
 const useStyles = createStyles((theme, params: { position?: TextUiPosition }) => ({
   wrapper: {
@@ -53,7 +53,7 @@ const TextUI: React.FC = () => {
           <Box style={data.style} className={classes.container}>
             <Group spacing={12}>
               {data.icon && <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" style={{ color: data.iconColor }} />}
-              <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown components={MarkdownComponents} remarkPlugins={[remarkGfm]}>
                 {data.text}
               </ReactMarkdown>
             </Group>

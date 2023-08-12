@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Avatar, createStyles, Group, Stack, Box, Text, keyframes, Sx } from '@mantine/core';
 import React from 'react';
 import type { NotificationProps } from '../../typings';
-import { markdownComponents } from '../../config/markdowncomponents';
+import MarkdownComponents from '../../config/MarkdownComponents';
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -183,7 +183,7 @@ const Notifications: React.FC = () => {
               {data.title && <Text className={classes.title}>{data.title}</Text>}
               {data.description && (
                 <ReactMarkdown
-                  components={markdownComponents}
+                  components={MarkdownComponents}
                   className={`${!data.title ? classes.descriptionOnly : classes.description} description`}
                 >
                   {data.description}

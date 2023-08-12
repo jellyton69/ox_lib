@@ -7,7 +7,7 @@ import { fetchNui } from '../../../utils/fetchNui';
 import ReactMarkdown from 'react-markdown';
 import HeaderButton from './components/HeaderButton';
 import ScaleFade from '../../../transitions/ScaleFade';
-import { markdownComponents } from '../../../config/markdowncomponents';
+import MarkdownComponents from '../../../config/MarkdownComponents';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: true });
@@ -92,9 +92,9 @@ const ContextMenu: React.FC = () => {
             <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
           )}
           <Box className={classes.titleContainer}>
-            <Title order={3} className={classes.titleText}>
-              <ReactMarkdown components={markdownComponents}>{contextMenu.title}</ReactMarkdown>
-            </Title>
+            <Text className={classes.titleText}>
+              <ReactMarkdown components={MarkdownComponents}>{contextMenu.title}</ReactMarkdown>
+            </Text>
           </Box>
           <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />
         </Flex>
