@@ -276,15 +276,14 @@ end
 ---@param vehicle number
 ---@param props VehicleProperties
 ---@return boolean?
-function lib.setVehicleProperties(vehicle, props)
+function lib.setVehicleProperties(vehicle, props, fixVehicle)
     if not DoesEntityExist(vehicle) then
         error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
         format(vehicle))
     end
 
     if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then
-        error((
-            "Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle))
+        error(("Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle))
     end
 
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
@@ -297,6 +296,9 @@ function lib.setVehicleProperties(vehicle, props)
         for id, disable in pairs(props.extras) do
             SetVehicleExtra(vehicle, tonumber(id) --[[@as number]], disable == 1)
         end
+    end
+
+    if fixVehicle then
         SetVehicleFixed(vehicle)
     end
 
@@ -337,15 +339,19 @@ function lib.setVehicleProperties(vehicle, props)
             ClearVehicleCustomPrimaryColour(vehicle)
             SetVehicleColours(vehicle, props.color1 --[[@as number]], colorSecondary --[[@as number]])
         else
+            if props.paintType1 then SetVehicleModColor_1(vehicle, props.paintType1, colorPrimary, pearlescentColor) end
+
             SetVehicleCustomPrimaryColour(vehicle, props.color1[1], props.color1[2], props.color1[3])
         end
     end
 
     if props.color2 then
         if type(props.color2) == 'number' then
-            ClearVehicleCustomPrimaryColour(vehicle)
+            ClearVehicleCustomSecondaryColour(vehicle)
             SetVehicleColours(vehicle, props.color1 or colorPrimary --[[@as number]], props.color2 --[[@as number]])
         else
+            if props.paintType2 then SetVehicleModColor_2(vehicle, props.paintType2, colorSecondary) end
+
             SetVehicleCustomSecondaryColour(vehicle, props.color2[1], props.color2[2], props.color2[3])
         end
     end
