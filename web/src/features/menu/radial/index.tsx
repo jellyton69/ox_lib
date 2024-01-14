@@ -156,13 +156,13 @@ const RadialMenu: React.FC = () => {
                       <LibIcon x={iconX - 12.5} y={iconY - 17.5} icon={item.icon} width={25} height={25} fixedWidth />
                       <text
                         x={iconX}
-                        y={iconY + (item.label.includes('  \n') ? 7 : 25)}
+                        y={iconY + (item?.label?.includes('  \n') ? 7 : 25)}
                         fill="#fff"
                         textAnchor="middle"
                         pointerEvents="none"
                       >
-                        {item.label.includes('  \n')
-                          ? item.label.split('  \n').map((value) => (
+                        {item?.label?.includes('  \n')
+                          ? item?.label?.split('  \n').map((value) => (
                               <tspan x={iconX} dy="1.2em">
                                 {value}
                               </tspan>
