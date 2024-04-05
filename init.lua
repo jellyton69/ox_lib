@@ -7,11 +7,16 @@ if not _VERSION:find('5.4') then
     error('^1Lua 5.4 must be enabled in the resource manifest!^0', 2)
 end
 
+local resourceName = GetCurrentResourceName()
 local ox_lib = 'ox_lib'
+
+-- Some people have decided to load this file as part of ox_lib's fxmanifest?
+if resourceName == ox_lib then return end
+
 local export = exports[ox_lib]
 
-if not GetResourceState(ox_lib):find('start') then
-    error('^1ox_lib should be started before this resource.^0', 2)
+if GetResourceState(ox_lib) ~= 'started' then
+    error('^1ox_lib must be started before this resource.^0', 0)
 end
 
 local status = export.hasLoaded()
@@ -40,7 +45,7 @@ local function loadModule(self, module)
     end
 
     if chunk then
-        local fn, err = load(chunk, ('@@ox_lib/%s/%s.lua'):format(module, context))
+        local fn, err = load(chunk, ('@@ox_lib/imports/%s/%s.lua'):format(module, context))
 
         if not fn or err then
             return error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
@@ -79,7 +84,7 @@ local function call(self, index, ...)
     return module
 end
 
-lib = setmetatable({
+local lib = setmetatable({
     name = ox_lib,
     context = context,
     onCache = function(key, cb)
@@ -89,6 +94,8 @@ lib = setmetatable({
     __index = call,
     __call = call,
 })
+
+_ENV.lib = lib
 
 -- Override standard Lua require with our own.
 require = lib.require
@@ -162,7 +169,7 @@ end
 ---Caches the result of a function, optionally clearing it after timeout ms.
 function cache(key, func, timeout) end
 
-cache = setmetatable({ game = GetGameName(), resource = GetCurrentResourceName() }, {
+local cache = setmetatable({ game = GetGameName(), resource = resourceName }, {
     __index = context == 'client' and function(self, key)
         AddEventHandler(('ox_lib:cache:%s'):format(key), function(value)
             self[key] = value
@@ -185,6 +192,8 @@ cache = setmetatable({ game = GetGameName(), resource = GetCurrentResourceName()
         return value
     end,
 })
+
+_ENV.cache = cache
 
 local notifyEvent = ('__ox_notify_%s'):format(cache.resource)
 
@@ -216,6 +225,33 @@ else
     ---@diagnostic disable-next-line: duplicate-set-field
     function lib.notify(playerId, data)
         TriggerClientEvent(notifyEvent, playerId, data)
+    end
+
+    local poolNatives = {
+        CPed = GetAllPeds,
+        CObject = GetAllObjects,
+        CVehicle = GetAllVehicles,
+    }
+
+    ---@param poolName 'CPed' | 'CObject' | 'CVehicle'
+    ---@return number[]
+    ---Server-side parity for the `GetGamePool` client native.
+    function GetGamePool(poolName)
+        local fn = poolNatives[poolName]
+        return fn and fn() --[[@as number[] ]]
+    end
+
+    ---@return number[]
+    ---Server-side parity for the `GetPlayers` client native.
+    function GetActivePlayers()
+        local playerNum = GetNumPlayerIndices()
+        local players = table.create(playerNum, 0)
+
+        for i = 1, playerNum do
+            players[i] = tonumber(GetPlayerFromIndex(i - 1))
+        end
+
+        return players
     end
 end
 
